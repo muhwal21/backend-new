@@ -1,7 +1,7 @@
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import fetch from 'node-fetch';
-import FormData from 'form-data'; // Jika Anda menggunakan 'form-data' di serverless function
+import FormData from 'form-data';
 
 export const config = {
     api: {
@@ -13,12 +13,11 @@ export default async function handler(req, res) {
     const apiToken = process.env.CLICKUP_API_TOKEN;
 
     // Menambahkan header CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Ganti '*' dengan domain Anda untuk keamanan lebih
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
     if (req.method === 'OPTIONS') {
-        // Tangani preflight request
         res.status(200).end();
         return;
     }
@@ -27,11 +26,16 @@ export default async function handler(req, res) {
         const form = new IncomingForm();
         form.parse(req, async (err, fields, files) => {
             if (err) {
+                console.error('Error parsing form data:', err);
                 return res.status(500).json({ error: 'Error parsing form data' });
             }
 
             const { name, listId } = fields;
             const file = files.file[0];
+
+            if (!file) {
+                return res.status(400).json({ error: 'No file uploaded' });
+            }
 
             // Membuat task di list
             const createTaskResponse = await fetch(`https://api.clickup.com/api/v2/list/${listId}/task`, {
@@ -45,6 +49,7 @@ export default async function handler(req, res) {
 
             if (!createTaskResponse.ok) {
                 const error = await createTaskResponse.json();
+                console.error('Error creating task:', error);
                 return res.status(400).json({ error: error.err || 'Unknown error' });
             }
 
@@ -67,10 +72,12 @@ export default async function handler(req, res) {
                 res.status(200).json({ message: 'File uploaded successfully!' });
             } else {
                 const error = await uploadFileResponse.json();
+                console.error('Error uploading file:', error);
                 res.status(400).json({ error: error.err || 'Unknown error' });
             }
         });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred.' });
+        console.error('Unexpected error:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 }
