@@ -1,5 +1,5 @@
-const listId = 'YOUR_LIST_ID'; // Ganti dengan List ID Anda
-const spaceId = 'YOUR_SPACE_ID'; // Ganti dengan Space ID Anda
+const listId = '901803130187'; // Ganti dengan List ID Anda
+const spaceId = '9018486553'; // Ganti dengan Space ID Anda
 
 document.getElementById('uploadForm').addEventListener('submit', async function (event) {
     event.preventDefault();
