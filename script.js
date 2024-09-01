@@ -1,5 +1,3 @@
-require('dotenv').config(); // Tambahkan ini jika menggunakan Node.js
-
 document.getElementById('uploadForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -12,48 +10,21 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
         return;
     }
 
-    const apiToken = process.env.API_TOKEN; // Ambil API token dari variabel lingkungan
-    const spaceId = process.env.SPACE_ID;   // Ambil space ID dari variabel lingkungan
-    const listId = process.env.LIST_ID;     // Ambil list ID dari variabel lingkungan
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('file', file);
 
     try {
-        const createTaskResponse = await fetch(`https://api.clickup.com/api/v2/list/${listId}/task`, {
+        const response = await fetch('/api/create-task', {
             method: 'POST',
-            headers: {
-                'Authorization': apiToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: name,
-                // parameter lain 
-            })
-        });
-
-        if (!createTaskResponse.ok) {
-            const error = await createTaskResponse.json();
-            throw new Error('Error creating task: ' + (error.err || 'Unknown error'));
-        }
-
-        const createdTask = await createTaskResponse.json();
-        const taskId = createdTask.id;
-
-        // Upload File
-        const formData = new FormData();
-        formData.append('attachment', file, file.name);
-
-        const uploadFileResponse = await fetch(`https://api.clickup.com/api/v2/task/${taskId}/attachment`, {
-            method: 'POST',
-            headers: {
-                'Authorization': apiToken
-            },
             body: formData
         });
 
-        if (uploadFileResponse.ok) {
+        if (response.ok) {
             alert('File uploaded successfully!');
         } else {
-            const error = await uploadFileResponse.json();
-            alert('Error uploading file: ' + (error.err || 'Unknown error'));
+            const error = await response.json();
+            alert('Error uploading file: ' + (error.error || 'Unknown error'));
             console.error('Error details:', error);
         }
     } catch (error) {
