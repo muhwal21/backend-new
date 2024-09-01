@@ -1,6 +1,3 @@
-const listId = '901803130187'; // Ganti dengan List ID Anda
-const spaceId = '9018486553'; // Ganti dengan Space ID Anda
-
 document.getElementById('uploadForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -15,23 +12,28 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('file', file);
-    formData.append('listId', listId);  // Kirim List ID ke API
-    formData.append('spaceId', spaceId); // Kirim Space ID ke API
+    formData.append('listId', '901803130187'); // ID list
+    formData.append('spaceId', '9018486553'); // ID space
 
     try {
-        const response = await fetch('https://backend-new-c7f3.vercel.app/api/create-task', { // Gunakan URL utama
+        const response = await fetch('/api/upload-task', {
             method: 'POST',
-            body: formData
+            body: JSON.stringify({
+                name: name,
+                listId: '901803130187',
+                spaceId: '9018486553'
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
 
         if (response.ok) {
-            const responseData = await response.json(); // Mendapatkan data dari response
-            alert('File uploaded successfully! Task ID: ' + responseData.taskId);
+            const data = await response.json();
+            alert('Task created with ID: ' + data.taskId);
         } else {
             const error = await response.json();
-            alert('Error uploading file: ' + (error.error || 'Unknown error'));
-            console.error('Error details:', error);
+            alert('Error creating task: ' + (error.error || 'Unknown error'));
         }
     } catch (error) {
         console.error('Error:', error);
