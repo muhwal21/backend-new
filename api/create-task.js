@@ -1,7 +1,7 @@
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
-import fetch from 'node-fetch';
-import FormData from 'form-data';
+import fetch from 'node-fetch'; // Pastikan `node-fetch` adalah versi yang benar
+import FormData from 'form-data'; // Pastikan ini terpasang di dependencies
 
 export const config = {
     api: {

@@ -20,7 +20,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     formData.append('spaceId', spaceId); // Kirim Space ID ke API
 
     try {
-        const response = await fetch('/api/create-task', { // Ganti dengan path endpoint yang sesuai
+        const response = await fetch('/api/create-task', { // Pastikan path ini sesuai dengan endpoint Anda
             method: 'POST',
             body: formData
         });
