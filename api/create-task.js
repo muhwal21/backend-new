@@ -1,5 +1,7 @@
-import { parse } from 'formidable'; // Memastikan FormData dapat diurai
+import { IncomingForm } from 'formidable';
 import fs from 'fs';
+import fetch from 'node-fetch';
+import FormData from 'form-data'; // Jika Anda tidak menggunakan 'form-data' di serverless function, hapus import ini
 
 export const config = {
     api: {
@@ -8,16 +10,27 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-    const apiToken = process.env.CLICKUP_API_TOKEN; // Ambil API token dari variabel lingkungan
+    const apiToken = process.env.CLICKUP_API_TOKEN;
+
+    // Menambahkan header CORS
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Atau ganti '*' dengan domain Anda untuk keamanan lebih
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    if (req.method === 'OPTIONS') {
+        // Tangani preflight request
+        res.status(200).end();
+        return;
+    }
 
     try {
-        const form = new formidable.IncomingForm();
+        const form = new IncomingForm();
         form.parse(req, async (err, fields, files) => {
             if (err) {
                 return res.status(500).json({ error: 'Error parsing form data' });
             }
 
-            const { name, listId, spaceId } = fields;
+            const { name, listId } = fields;
             const file = files.file[0];
 
             // Membuat task di list
