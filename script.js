@@ -20,13 +20,14 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     formData.append('spaceId', spaceId); // Kirim Space ID ke API
 
     try {
-        const response = await fetch('/api/create-task', { // Pastikan path ini sesuai dengan endpoint Anda
+        const response = await fetch('https://backend-new-c7f3.vercel.app/api/create-task', { // Gunakan URL utama
             method: 'POST',
             body: formData
         });
 
         if (response.ok) {
-            alert('File uploaded successfully!');
+            const responseData = await response.json(); // Mendapatkan data dari response
+            alert('File uploaded successfully! Task ID: ' + responseData.taskId);
         } else {
             const error = await response.json();
             alert('Error uploading file: ' + (error.error || 'Unknown error'));
