@@ -1,3 +1,6 @@
+const listId = 'YOUR_LIST_ID'; // Ganti dengan List ID Anda
+const spaceId = 'YOUR_SPACE_ID'; // Ganti dengan Space ID Anda
+
 document.getElementById('uploadForm').addEventListener('submit', async function (event) {
     event.preventDefault();
 
@@ -13,9 +16,11 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     const formData = new FormData();
     formData.append('name', name);
     formData.append('file', file);
+    formData.append('listId', listId);  // Kirim List ID ke API
+    formData.append('spaceId', spaceId); // Kirim Space ID ke API
 
     try {
-        const response = await fetch('/api/create-task', {
+        const response = await fetch('https://your-project.vercel.app/api/create-task', { // Ganti dengan URL endpoint Anda
             method: 'POST',
             body: formData
         });
