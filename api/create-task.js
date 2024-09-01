@@ -1,7 +1,7 @@
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import fetch from 'node-fetch';
-import FormData from 'form-data'; // Jika Anda tidak menggunakan 'form-data' di serverless function, hapus import ini
+import FormData from 'form-data'; // Jika Anda menggunakan 'form-data' di serverless function
 
 export const config = {
     api: {
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     const apiToken = process.env.CLICKUP_API_TOKEN;
 
     // Menambahkan header CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Atau ganti '*' dengan domain Anda untuk keamanan lebih
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Ganti '*' dengan domain Anda untuk keamanan lebih
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     
