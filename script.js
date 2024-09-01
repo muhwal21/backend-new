@@ -14,18 +14,12 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     formData.append('name', name);
     formData.append('listId', '901803130187'); // ID list
     formData.append('spaceId', '9018486553'); // ID space
+    formData.append('file', file);
 
     try {
-        const response = await fetch('/api/upload-task', {
+        const response = await fetch('/api/create-task', {
             method: 'POST',
-            body: JSON.stringify({
-                name: name,
-                listId: '901803130187',
-                spaceId: '9018486553'
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            body: formData
         });
 
         if (response.ok) {

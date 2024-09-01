@@ -1,7 +1,18 @@
-// api/upload-task.js
+// api/create-task.js
 export default async function handler(req, res) {
-    const apiToken = process.env.CLICKUP_API_TOKEN; // Mengambil token dari variabel lingkungan
-    const { name, listId, spaceId } = req.body;
+    // Menambahkan header CORS
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Mengizinkan semua domain
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Metode yang diizinkan
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization'); // Header yang diizinkan
+
+    if (req.method === 'OPTIONS') {
+        // Respon preflight request
+        res.status(200).end();
+        return;
+    }
+
+    // Mendapatkan data dari permintaan
+    const { name, listId, spaceId, file } = req.body;
 
     // Validasi input
     if (!name || !listId || !spaceId) {
@@ -13,7 +24,7 @@ export default async function handler(req, res) {
         const createTaskResponse = await fetch(`https://api.clickup.com/api/v2/list/${listId}/task`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${apiToken}`,
+                'Authorization': `Bearer ${process.env.CLICKUP_API_TOKEN}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ name })
@@ -27,8 +38,8 @@ export default async function handler(req, res) {
         const createdTask = await createTaskResponse.json();
         const taskId = createdTask.id;
 
-        // Mengupload file (upload file bagian ini bisa disesuaikan)
-        // ...
+        // Mengupload file (Anda bisa menggunakan library seperti 'form-data' untuk menangani ini di backend)
+        // File upload bisa dilakukan secara langsung di backend jika Anda menggunakan pustaka yang tepat
 
         res.status(200).json({ taskId });
     } catch (error) {
