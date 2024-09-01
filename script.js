@@ -20,7 +20,7 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     formData.append('spaceId', spaceId); // Kirim Space ID ke API
 
     try {
-        const response = await fetch('https://vercel.com/muhwal21s-projects/backend-new-c7f3', { // Ganti dengan URL endpoint Anda
+        const response = await fetch('https://backend-new-c7f3.vercel.app/', { // Ganti dengan URL endpoint Anda
             method: 'POST',
             body: formData
         });
